@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
-#infinite and beyond with SIGTERM
-touch /var/run/myscript.pid
+# Show PID
 
-i=1
-while [ $i ]
-do
-	trap "echo I hate the kill command; rm -f /var/run/mysrcipt.pid; exit" 15
-	trap "echo Y U no love me?!" 2
-	trap "rm -f /var/run/myscript.pid; exit" 3
-	echo To infinity and beyond
+PID_FILE=myscript.pid
+echo $$ > $PID_FILE
+sudo mv $PID_FILE /var/run/
+
+while true; do
+    echo "To infinity and beyond"
+    trap "echo I hate the kill command; sudo rm /var/run/myscript.pid
+;exit" SIGTERM
+    trap "echo Y U no love me?!" SIGINT
 done
