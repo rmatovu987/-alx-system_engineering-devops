@@ -3,9 +3,8 @@
 
 sudo apt-get -y update
 sudo apt-get -y install nginx
-echo "Hello World" > index.html
+echo "Hello World" > /var/www/html/index.nginx-debian.html
 echo "Ceci n'est pas une page" > error404.html
-sudo mv index.html /var/www/html
 sudo mv error404.html /var/www/html
 
 sudo sed -i '/listen 80 default_server;/a rewrite ^/redirect_me https://giphy.com/gifs/1wqqlaQ7IX3TXibXZE permanent;' /etc/nginx/sites-available/default
