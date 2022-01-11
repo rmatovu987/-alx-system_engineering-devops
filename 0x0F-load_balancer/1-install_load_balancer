@@ -1,13 +1,23 @@
 #!/usr/bin/env bash
-# Configures a new Ubuntu server with a HAproxy load-balancer
-apt-get -y install --no-install-recommends software-properties-common
-add-apt-repository ppa:vbernat/haproxy-2.0
-apt-get -y update
-apt-get -y install haproxy=2.0.\*
-sed -i '/errorfile 504/a listen rmatovu987' /etc/haproxy/haproxy.cfg
-sed -i '/listen rmatovu987/a         bind :80' /etc/haproxy/haproxy.cfg
-sed -i '/bind :80/a         mode http' /etc/haproxy/haproxy.cfg
-sed -i '/mode http/a         server 380-web-01 35.231.223.136:80 check' /etc/haproxy/haproxy.cfg
-sed -i '/server 380-web-01 35.231.223.136:80 check/a         server 380-web-02 3.226.72.197:80 check' /etc/haproxy/haproxy.cfg
-sed -i '/#EXTRAOPTS="-de -m 16"/a ENABLED=1' /etc/default/haproxy
-service haproxy start
+# Install and configure HAproxy on my lb-01 server.
+apt-get -y install haproxy
+
+# edit config file
+server_config=\
+"
+frontend  rmatovu987
+        bind *:80
+        mode http
+        default_backend rmatovu987
+backend rmatovu987
+        balance roundrobin
+        server 380-web-01 35.231.223.136:80 check
+        server 380-web-02 3.226.72.197:80 check
+"
+ echo "$server_config" >> /etc/haproxy/haproxy.cfg
+
+ # enable haproxy to be started by init script
+
+ echo "ENABLED=1" >> /etc/default/haproxy
+
+ sudo service haproxy restart
