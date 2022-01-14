@@ -14,10 +14,9 @@ backend rmatovu987
         server 380-web-01 35.231.223.136:80 check
         server 380-web-02 3.226.72.197:80 check
 "
- echo "$server_config" >> /etc/haproxy/haproxy.cfg
+echo "$server_config" >> /etc/haproxy/haproxy.cfg
 
- # enable haproxy to be started by init script
+# enable haproxy to be started by init script
 
- echo "ENABLED=1" >> /etc/default/haproxy
-
- sudo service haproxy restart
+echo "ENABLED=1" >> /etc/default/haproxy
+sudo service haproxy restart
